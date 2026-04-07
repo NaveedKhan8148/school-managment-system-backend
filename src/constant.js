@@ -1,1 +1,1 @@
-export const DB_NAME = "YOUTUBE_CHANNEL";
+export const DB_NAME = "user";
