@@ -9,35 +9,38 @@ app.use(cors({
     credentials: true
 }))
 
-app.use(express.json({limit: "16kb"}))
-app.use(express.urlencoded({extended: true, limit: "16kb"}))
+app.use(express.json({ limit: "16kb" }))
+app.use(express.urlencoded({ extended: true, limit: "16kb" }))
 app.use(express.static("public"))
 app.use(cookieParser())
 
 
-//routes import
 import userRouter from './routes/user.routes.js'
-import healthcheckRouter from "./routes/healthcheck.routes.js"
-import tweetRouter from "./routes/tweet.routes.js"
-import subscriptionRouter from "./routes/subscription.routes.js"
-import videoRouter from "./routes/video.routes.js"
-import commentRouter from "./routes/comment.routes.js"
-import likeRouter from "./routes/like.routes.js"
-import playlistRouter from "./routes/playlist.routes.js"
-import dashboardRouter from "./routes/dashboard.routes.js"
-import jokesRouter from './routes/jokes.routes.js';
-//routes declaration
-app.use("/api/v1/healthcheck", healthcheckRouter)
-app.use("/api/v1/users", userRouter)
-app.use("/api/v1/tweets", tweetRouter)
-app.use("/api/v1/subscriptions", subscriptionRouter)
-app.use("/api/v1/videos", videoRouter)
-app.use("/api/v1/comments", commentRouter)
-app.use("/api/v1/likes", likeRouter)
-app.use("/api/v1/playlist", playlistRouter)
-app.use("/api/v1/dashboard", dashboardRouter)
 
-app.use("/api/v1/jokes", jokesRouter);
-// http://localhost:8000/api/v1/users/register
+// ── School Management routes ──────────────────────────────────────────────────
+import teacherRouter from "./routes/teacher.routes.js"
+import studentRouter from "./routes/student.routes.js"
+import parentRouter from "./routes/parent.routes.js"
+import classRouter from "./routes/class.routes.js"
+import attendanceRouter from "./routes/attendance.routes.js"
+import feesRouter from "./routes/fees.routes.js"
+import resultRouter from "./routes/result.routes.js"
+import timetableRouter from "./routes/timetable.routes.js"
+import warningRouter from "./routes/academicWarning.routes.js"
+
+// ── Existing route declarations ───────────────────────────────────────────────
+// app.use("/api/v1/healthcheck", healthcheckRouter)
+app.use("/api/v1/users", userRouter)
+
+// ── School Management route declarations ─────────────────────────────────────
+app.use("/api/v1/teachers", teacherRouter)
+app.use("/api/v1/students", studentRouter)
+app.use("/api/v1/parents", parentRouter)
+app.use("/api/v1/classes", classRouter)
+app.use("/api/v1/attendance", attendanceRouter)
+app.use("/api/v1/fees", feesRouter)
+app.use("/api/v1/results", resultRouter)
+app.use("/api/v1/timetable", timetableRouter)
+app.use("/api/v1/warnings", warningRouter)
 
 export { app }
