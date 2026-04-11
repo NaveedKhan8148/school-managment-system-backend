@@ -27,6 +27,11 @@ const studentSchema = new Schema(
             type: Date,
             required: true,
         },
+        status: {
+            type: String,
+            enum: ["ACTIVE", "INACTIVE"],
+            default: "ACTIVE",
+        },
         classId: {
             type: Schema.Types.ObjectId,
             ref: "Class",

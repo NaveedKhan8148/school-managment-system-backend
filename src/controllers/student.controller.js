@@ -6,7 +6,7 @@ import { User } from "../models/user.model.js";
 
 // POST /api/v1/students/
 const createStudent = asyncHandler(async (req, res) => {
-    const { email, password, rollNo, studentName, address, dateOfJoining, classId } = req.body;
+    const { email, password, rollNo, status, studentName, address, dateOfJoining, classId } = req.body;
 
     if ([email, password, rollNo, studentName, dateOfJoining, classId].some((f) => !f?.toString().trim())) {
         throw new ApiError(400, "All required fields must be provided");
@@ -21,6 +21,7 @@ const createStudent = asyncHandler(async (req, res) => {
         userId: user._id,
         rollNo,
         studentName,
+        status,
         address,
         dateOfJoining,
         classId,
@@ -56,11 +57,11 @@ const getStudentsByClass = asyncHandler(async (req, res) => {
 
 // PATCH /api/v1/students/:id
 const updateStudent = asyncHandler(async (req, res) => {
-    const { rollNo, studentName, address, dateOfJoining, classId } = req.body;
+    const { rollNo,status, studentName, address, dateOfJoining, classId } = req.body;
 
     const student = await Student.findByIdAndUpdate(
         req.params.id,
-        { $set: { rollNo, studentName, address, dateOfJoining, classId } },
+        { $set: { rollNo, status, studentName, address, dateOfJoining, classId } },
         { new: true, runValidators: true }
     );
 
