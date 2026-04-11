@@ -27,7 +27,7 @@ import feesRouter from "./routes/fees.routes.js"
 import resultRouter from "./routes/result.routes.js"
 import timetableRouter from "./routes/timetable.routes.js"
 import warningRouter from "./routes/academicWarning.routes.js"
-
+import workflowRouter from "./routes/approvalWorkflow.routes.js"
 // ── Existing route declarations ───────────────────────────────────────────────
 // app.use("/api/v1/healthcheck", healthcheckRouter)
 app.use("/api/v1/users", userRouter)
@@ -42,5 +42,7 @@ app.use("/api/v1/fees", feesRouter)
 app.use("/api/v1/results", resultRouter)
 app.use("/api/v1/timetable", timetableRouter)
 app.use("/api/v1/warnings", warningRouter)
+app.use("/api/v1/workflows", workflowRouter)
 
 export { app }
+
