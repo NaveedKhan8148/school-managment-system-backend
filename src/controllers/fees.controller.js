@@ -5,13 +5,13 @@ import { Fees } from "../models/fees.model.js";
 
 // POST /api/v1/fees/
 const createFee = asyncHandler(async (req, res) => {
-    const { studentId, feeType, amount, dueDate,paidDate } = req.body;
+    const { studentId, feeType, amount, dueDate } = req.body;
 
-    if (!studentId || !feeType || !amount || !dueDate||!paidDate) {
-        throw new ApiError(400, "studentId, feeType, amount, dueDate and paidDate are required");
+    if (!studentId || !feeType || !amount || !dueDate) {
+        throw new ApiError(400, "studentId, feeType, amount and dueDate are required");
     }
 
-    const fee = await Fees.create({ studentId, feeType, amount, dueDate,paidDate });
+    const fee = await Fees.create({ studentId, feeType, amount, dueDate });
     return res.status(201).json(new ApiResponse(201, fee, "Fee record created successfully"));
 });
 
@@ -45,11 +45,11 @@ const markFeePaid = asyncHandler(async (req, res) => {
 
 // PATCH /api/v1/fees/:id
 const updateFee = asyncHandler(async (req, res) => {
-    const { feeType, amount, dueDate, status } = req.body;
+    const { feeType, amount, dueDate, status,paidDate } = req.body;
 
     const fee = await Fees.findByIdAndUpdate(
         req.params.id,
-        { $set: { feeType, amount, dueDate, status } },
+        { $set: { feeType, amount, dueDate, status, paidDate } },
         { new: true, runValidators: true }
     );
 

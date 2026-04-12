@@ -9,7 +9,7 @@ const feesSchema = new Schema(
         },
         feeType: {
             type: String,
-            enum: ["Tuition", "Lab", "Library"],
+            enum: ["Tuition", "Lab", "Library" ,"Exam","Sports","Transport"],
             required: true,
         },
         amount: {
