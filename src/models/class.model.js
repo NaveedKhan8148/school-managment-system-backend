@@ -13,6 +13,16 @@ const classSchema = new Schema(
             ref: "Teacher",
             required: true,
         },
+        section:{
+            type: String,
+            trim: true, // e.g. "A", "B", "C"
+        },
+        academicYear: {
+            type: String,
+            required: false,
+            trim: true, // e.g. "2023-2024"
+        },
+
     },
     { timestamps: true }
 );

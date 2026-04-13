@@ -45,11 +45,11 @@ const getTeacherById = asyncHandler(async (req, res) => {
 
 // PATCH /api/v1/teachers/:id
 const updateTeacher = asyncHandler(async (req, res) => {
-    const { name, cnicNumber, contactNumber, subject, dateOfJoining, address } = req.body;
+    const { name, cnicNumber, contactNumber, subject, dateOfJoining, address ,status} = req.body;
 
     const teacher = await Teacher.findByIdAndUpdate(
         req.params.id,
-        { $set: { name, cnicNumber, contactNumber, subject, dateOfJoining, address } },
+        { $set: { name, cnicNumber, contactNumber, subject, dateOfJoining, address, status } },
         { new: true, runValidators: true }
     );
 

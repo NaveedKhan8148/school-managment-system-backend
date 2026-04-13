@@ -37,6 +37,11 @@ const teacherSchema = new Schema(
             type: String,
             trim: true,
         },
+        status: {
+            type: String,
+            enum: ["ACTIVE", "INACTIVE"],
+            default: "ACTIVE",
+        },
     },
     { timestamps: true }
 );

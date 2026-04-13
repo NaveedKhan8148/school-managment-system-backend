@@ -5,7 +5,7 @@ import { Class } from "../models/class.model.js";
 
 // POST /api/v1/classes/
 const createClass = asyncHandler(async (req, res) => {
-    const { name, classTeacherId } = req.body;
+    const { name, classTeacherId , section, academicYear } = req.body;
 
     if (!name?.trim() || !classTeacherId) {
         throw new ApiError(400, "name and classTeacherId are required");
@@ -14,7 +14,7 @@ const createClass = asyncHandler(async (req, res) => {
     const existing = await Class.findOne({ name });
     if (existing) throw new ApiError(409, "Class with this name already exists");
 
-    const newClass = await Class.create({ name, classTeacherId });
+    const newClass = await Class.create({ name, classTeacherId, section, academicYear });
 
     return res.status(201).json(new ApiResponse(201, newClass, "Class created successfully"));
 });
@@ -34,11 +34,11 @@ const getClassById = asyncHandler(async (req, res) => {
 
 // PATCH /api/v1/classes/:id
 const updateClass = asyncHandler(async (req, res) => {
-    const { name, classTeacherId } = req.body;
+    const { name, classTeacherId , section, academicYear } = req.body;
 
     const cls = await Class.findByIdAndUpdate(
         req.params.id,
-        { $set: { name, classTeacherId } },
+        { $set: { name, classTeacherId, section, academicYear } },
         { new: true, runValidators: true }
     );
 
