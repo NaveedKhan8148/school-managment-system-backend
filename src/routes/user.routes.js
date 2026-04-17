@@ -27,5 +27,6 @@ router.route("/current-user").get(verifyJWT, getCurrentUser);
 router.route("/").get(verifyJWT, getAllUsers);
 router.route("/:id/status").patch(verifyJWT, updateUserStatus);
 router.route("/:id").delete(verifyJWT, deleteUser);
-
+router.route("/by-role/:role").get(verifyJWT, getUsersByRole);
+router.route("/:id/status").patch(verifyJWT, updateUserStatus);
 export default router;

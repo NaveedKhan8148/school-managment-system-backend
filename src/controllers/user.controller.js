@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -131,9 +130,78 @@ const deleteUser = asyncHandler(async (req, res) => {
 });
 
 // GET /api/v1/users/   (admin only)
+// Supports optional ?role=TEACHER&status=ACTIVE&page=1&limit=20&search=ahmed
 const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find().select("-password -refreshToken");
     return res.status(200).json(new ApiResponse(200, users, "Users fetched"));
+});
+
+// GET /api/v1/users/by-role/:role
+// Returns all users matching the given role.
+// Valid roles: ADMIN | TEACHER | STUDENT | PARENT
+// Optional query params:
+//   ?status=ACTIVE|INACTIVE   — filter by account status
+//   ?search=<text>            — partial match on email (case-insensitive)
+//   ?page=1&limit=20          — pagination (defaults: page=1, limit=50)
+const getUsersByRole = asyncHandler(async (req, res) => {
+    const { role } = req.params;
+    const { status, search, page = 1, limit = 50 } = req.query;
+
+    // Validate role value
+    const VALID_ROLES = ["ADMIN", "TEACHER", "STUDENT", "PARENT"];
+    if (!VALID_ROLES.includes(role.toUpperCase())) {
+        throw new ApiError(
+            400,
+            `Invalid role "${role}". Must be one of: ${VALID_ROLES.join(", ")}`
+        );
+    }
+
+    // Build filter
+    const filter = { role: role.toUpperCase() };
+
+    if (status) {
+        if (!["ACTIVE", "INACTIVE"].includes(status.toUpperCase())) {
+            throw new ApiError(400, `Invalid status "${status}". Must be ACTIVE or INACTIVE`);
+        }
+        filter.status = status.toUpperCase();
+    }
+
+    if (search?.trim()) {
+        filter.email = { $regex: search.trim(), $options: "i" };
+    }
+
+    // Pagination
+    const pageNum  = Math.max(1, parseInt(page));
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit)));
+    const skip     = (pageNum - 1) * limitNum;
+
+    const [users, total] = await Promise.all([
+        User.find(filter)
+            .select("-password -refreshToken")
+            .skip(skip)
+            .limit(limitNum)
+            .sort({ createdAt: -1 }),
+        User.countDocuments(filter),
+    ]);
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            {
+                users,
+                pagination: {
+                    total,
+                    page:       pageNum,
+                    limit:      limitNum,
+                    totalPages: Math.ceil(total / limitNum),
+                    hasNext:    pageNum < Math.ceil(total / limitNum),
+                    hasPrev:    pageNum > 1,
+                },
+                filters: { role: role.toUpperCase(), status: status?.toUpperCase() || null, search: search || null },
+            },
+            `Users with role "${role.toUpperCase()}" fetched successfully`
+        )
+    );
 });
 
 export {
@@ -146,4 +214,5 @@ export {
     updateUserStatus,
     deleteUser,
     getAllUsers,
+    getUsersByRole,
 };
