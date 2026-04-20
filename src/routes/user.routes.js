@@ -9,6 +9,7 @@ import {
     updateUserStatus,
     deleteUser,
     getAllUsers,
+    getUsersByRole
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
